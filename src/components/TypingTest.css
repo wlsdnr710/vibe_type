@@ -1,66 +1,105 @@
 
-.typing-test-container {
-  max-width: 600px;
-  margin: 50px auto;
-  padding: 20px;
-  border: 1px solid #ccc;
+.real-time-stats {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 20px;
+  padding: 15px;
+  background-color: var(--words-bg-light);
   border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.App.dark .real-time-stats {
+  background-color: var(--words-bg-dark);
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stat-value {
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+.stat-label {
+  font-size: 0.9rem;
+  text-transform: uppercase;
+}
+
+.typing-test-container {
+  max-width: 800px;
+  width: 100%;
+  margin: 0;
+  padding: 30px;
+  border: none;
+  border-radius: 12px;
   font-family: sans-serif;
+  background-color: var(--container-bg-light);
+}
+
+.App.dark .typing-test-container {
+  background-color: var(--container-bg-dark);
 }
 
 .words-container {
   margin-bottom: 20px;
   line-height: 1.8;
-  font-size: 1.2em;
+  font-size: 1.5rem;
+  background-color: var(--words-bg-light);
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.App.dark .words-container {
+  background-color: var(--words-bg-dark);
 }
 
 .word {
-  padding: 2px;
-  margin: 2px;
+  padding: 4px;
+  margin: 3px;
   border-radius: 4px;
+  transition: background-color 0.2s, color 0.2s;
 }
 
 .word.active {
-  background-color: #e0e0e0;
+  background-color: #d1e7fd;
+}
+
+.App.dark .word.active {
+  background-color: #0b5ed7;
 }
 
 .word.correct {
-  color: #4caf50;
+  color: #198754;
 }
 
 .word.incorrect {
-  color: #f44336;
+  color: #dc3545;
   text-decoration: underline;
+  text-decoration-color: #dc3545;
 }
 
 .typing-input {
   width: 100%;
-  padding: 10px;
-  font-size: 1.2em;
-  border-radius: 4px;
-  border: 1px solid #ccc;
+  padding: 15px;
+  font-size: 1.5rem;
+  border-radius: 8px;
+  border: 1px solid var(--input-border-light);
+  background-color: var(--input-bg-light);
   font-family: sans-serif;
   margin-top: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  color: inherit;
+  box-sizing: border-box;
 }
 
-.results-container {
-  margin-top: 20px;
+.App.dark .typing-input {
+  background-color: var(--input-bg-dark);
+  border-color: var(--input-border-dark);
 }
 
-.stats {
-  margin-bottom: 10px;
-}
 
-.reset-button {
-  padding: 10px 20px;
-  font-size: 1em;
-  border: none;
-  border-radius: 4px;
-  background-color: #007bff;
-  color: white;
-  cursor: pointer;
-}
-
-.reset-button:hover {
-  background-color: #0056b3;
-}

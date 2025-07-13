@@ -1,7 +1,8 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import Word from './Word';
-import Stats from './Stats';
+import RealTimeStats from './RealTimeStats';
+import Modal from './Modal';
 import './TypingTest.css';
 
 const TypingTest = () => {
@@ -13,15 +14,35 @@ const TypingTest = () => {
   const [isFinished, setIsFinished] = useState(false);
   const [startTime, setStartTime] = useState(null);
   const [endTime, setEndTime] = useState(null);
+  const [wpm, setWpm] = useState(0);
+  const [accuracy, setAccuracy] = useState(100);
   const inputRef = useRef(null);
 
   useEffect(() => {
-    // In a real app, you'd fetch this from an API
     const sampleText = "The quick brown fox jumps over the lazy dog. This is a sample text for the typing test. It contains several words and punctuation marks. Try to type it as fast and as accurately as possible. Good luck!";
     setText(sampleText);
     setWords(sampleText.split(' '));
     inputRef.current.focus();
   }, []);
+
+  const calculateWPM = () => {
+    if (!startTime) return 0;
+    const durationInMinutes = (Date.now() - startTime) / 60000;
+    const charactersTyped = typedText.length + userInput.length;
+    return durationInMinutes > 0 ? Math.round((charactersTyped / 5) / durationInMinutes) : 0;
+  };
+
+  const calculateAccuracy = () => {
+    const fullTypedText = typedText + userInput;
+    const originalTextSlice = text.substring(0, fullTypedText.length);
+    let correctChars = 0;
+    for (let i = 0; i < fullTypedText.length; i++) {
+      if (fullTypedText[i] === originalTextSlice[i]) {
+        correctChars++;
+      }
+    }
+    return fullTypedText.length > 0 ? Math.round((correctChars / fullTypedText.length) * 100) : 100;
+  };
 
   const handleInputChange = (e) => {
     if (isFinished) return;
@@ -32,6 +53,8 @@ const TypingTest = () => {
 
     const { value } = e.target;
     setUserInput(value);
+    setWpm(calculateWPM());
+    setAccuracy(calculateAccuracy());
 
     if (value.endsWith(' ')) {
       setTypedText(prev => prev + value);
@@ -55,15 +78,16 @@ const TypingTest = () => {
     setIsFinished(false);
     setStartTime(null);
     setEndTime(null);
+    setWpm(0);
+    setAccuracy(100);
     inputRef.current.focus();
   };
 
   const typedWords = typedText.trim().split(' ');
-  const currentWord = words[wordIndex];
-  const typedWord = userInput.trim();
 
   return (
     <div className="typing-test-container">
+      <RealTimeStats wpm={wpm} accuracy={accuracy} />
       <div className="words-container">
         {words.map((word, index) => (
           <Word
@@ -83,19 +107,14 @@ const TypingTest = () => {
         className="typing-input"
         disabled={isFinished}
       />
-      {isFinished && (
-        <div className="results-container">
-          <Stats
-            startTime={startTime}
-            endTime={endTime}
-            text={text}
-            userInput={typedText + userInput}
-          />
-          <button onClick={resetTest} className="reset-button">
-            Try Again
-          </button>
-        </div>
-      )}
+      <Modal
+        isOpen={isFinished}
+        onClose={resetTest}
+        startTime={startTime}
+        endTime={endTime}
+        text={text}
+        userInput={typedText + userInput}
+      />
     </div>
   );
 };
